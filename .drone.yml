@@ -1,0 +1,25 @@
+build:
+  image: golang:1.5
+  commands:
+    - make deps
+    - make build
+    - make test
+
+publish:
+  docker:
+    username: drone
+    password: $$DOCKER_PASS
+    email: $$DOCKER_EMAIL
+    repo: plugins/drone-azure-storage
+    when:
+      branch: master
+
+plugin:
+  name: Azure Storage
+  desc: Publishs files and artifacts to Azure Storage
+  type: publish
+  image: plugins/drone-azure-storage
+  labels:
+    - artifacts
+    - azure
+    - storage
