@@ -31,22 +31,28 @@ func main() {
 	plugin.MustParse()
 
 	if len(vargs.StorageAccountKey) == 0 {
+		fmt.Println("storage_account must be defined in your .drone.yml")
 		return
 	}
 
 	if len(vargs.Container) == 0 {
+		fmt.Println("container must be defined in your .drome.yml")
 		return
 	}
 
 	cmd := command(vargs, workspace)
+	trace(cmd)
+
+	// Append StorageAccountKey to the cmd after trace to avoid exposing the key
+	cmd.Args = append(cmd.Args, "--storageaccountkey", vargs.StorageAccountKey)
 	cmd.Env = os.Environ()
 	cmd.Dir = workspace.Path
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
-	trace(cmd)
 	err := cmd.Run()
 	if err != nil {
+		fmt.Printf("Failed to upload %s to %s/%s: %s", vargs.Source, vargs.StorageAccountName, vargs.Container, err)
 		os.Exit(1)
 	}
 }
@@ -54,8 +60,6 @@ func main() {
 func command(s AzureBlobxfer, w plugin.Workspace) *exec.Cmd {
 
 	args := []string{
-		"--storageaccountkey",
-		s.StorageAccountKey,
 		s.StorageAccountName,
 		s.Container,
 		filepath.Join(w.Path, s.Source),
