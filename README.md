@@ -25,6 +25,10 @@ Drone plugin for publishing files and artifacts to Azure Storage
         "path": "/drone/src/github.com/drone/drone"
     },
     "vargs": {
+       "account_key": ""
+        "storage_account": "my-storage-account",
+        "container": "my-container"
+        "source": "folder/to/upload"
     }
 }
 EOF
@@ -58,6 +62,10 @@ docker run -i plugins/drone-azure-storage <<EOF
         "path": "/drone/src/github.com/drone/drone"
     },
     "vargs": {
+       "account_key": ""
+        "storage_account": "my-storage-account",
+        "container": "my-container"
+        "source": "folder/to/upload"
     }
 }
 EOF
