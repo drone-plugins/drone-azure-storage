@@ -20,6 +20,5 @@ plugin:
   type: publish
   image: plugins/drone-azure-storage
   labels:
-    - artifacts
     - azure
     - storage
