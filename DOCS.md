@@ -1,9 +1,9 @@
-Use this plugin for publishing files and artifacts to Azure Storage. The following parameters are required:
+Use this plugin for publishing files and artifacts to Azure Storage. The plugin is power by [blobxfer](https://github.com/Azure/azure-batch-samples/tree/master/Python/Storage) - an upload tool from the Microsoft HFC team. The following parameters are required:
 
 * `account_key` - Storage Account Key, required for authentication
 * `storage_account` - Storage Account name
 * `container` - The target storage container
-* `source` - Tocation of folder to sync relative to the workspace root
+* `source` - Location of folder to sync relative to the workspace root
 
 ## Example
 
