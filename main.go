@@ -10,7 +10,6 @@ import (
 )
 
 var (
-	build     string
 	buildDate string
 )
 
@@ -23,6 +22,7 @@ type AzureBlobxfer struct {
 
 func main() {
 	fmt.Printf("Drone Azure Storage Plugin built at %s\n", buildDate)
+
 	workspace := plugin.Workspace{}
 	vargs := AzureBlobxfer{}
 
