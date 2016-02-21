@@ -4,7 +4,7 @@
 [![Coverage Status](https://aircover.co/badges/drone-plugins/drone-azure-storage/coverage.svg)](https://aircover.co/drone-plugins/drone-azure-storage)
 [![](https://badge.imagelayers.io/plugins/drone-azure-storage:latest.svg)](https://imagelayers.io/?images=plugins/drone-azure-storage:latest 'Get your own badge on imagelayers.io')
 
-Drone plugin to publish files and artifacts to Azure Storage
+Drone plugin to publish files and artifacts to Azure Storage. For the usage information and a listing of the available options please take a look at [the docs](DOCS.md).
 
 ## Binary
 
