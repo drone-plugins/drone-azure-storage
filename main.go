@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/drone/drone-plugin-go/plugin"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
+
+	"github.com/drone/drone-plugin-go/plugin"
 )
 
 var (
@@ -18,6 +19,7 @@ type AzureBlobxfer struct {
 	StorageAccountName string `json:"storage_account"`
 	Container          string `json:"container"`
 	Source             string `json:"source"`
+	Target             string `json:"target"`
 }
 
 func main() {
@@ -44,7 +46,10 @@ func main() {
 	trace(cmd)
 
 	// Append StorageAccountKey to the cmd after trace to avoid exposing the key
-	cmd.Args = append(cmd.Args, "--storageaccountkey", vargs.StorageAccountKey)
+	cmd.Args = append(cmd.Args, "--storageaccountkey", vargs.StorageAccountKey, "--upload")
+	if len(vargs.Target) > 0 {
+		cmd.Args = append(cmd.Args, "--remoteresource", vargs.Target)
+	}
 	cmd.Env = os.Environ()
 	cmd.Dir = workspace.Path
 	cmd.Stdout = os.Stdout

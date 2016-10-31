@@ -4,6 +4,7 @@ Use this plugin for publishing files and artifacts to Azure Storage. The plugin 
 * `storage_account` - Storage Account name
 * `container` - The target storage container
 * `source` - Location of folder to sync relative to the workspace root
+* `target` - Remote resource location
 
 ## Example
 
@@ -16,4 +17,5 @@ publish:
     storage_account: my-storage-account
     container: my-storage-container
     source: folder/to/upload
+    target: target/path
 ```
