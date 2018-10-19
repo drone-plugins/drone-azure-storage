@@ -1,6 +1,6 @@
 [[constraint]]
-  branch = "master"
-  name = "github.com/drone/drone-plugin-go"
+  name = "github.com/drone/drone-go"
+  revision = "eaa41f7836a191224ec5702d2458db07882ec269"
 
 [prune]
   go-tests = true

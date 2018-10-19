@@ -2,14 +2,15 @@
 
 
 [[projects]]
-  branch = "master"
-  name = "github.com/drone/drone-plugin-go"
+  digest = "1:da5c468e0a7858053be82e2df5f40626c0f6b9ed60fafb1ac15d71c2c3101ad0"
+  name = "github.com/drone/drone-go"
   packages = ["plugin"]
-  revision = "d6109f644c5935c22620081b4c234bb2263743c7"
+  pruneopts = "UT"
+  revision = "eaa41f7836a191224ec5702d2458db07882ec269"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "39f338ee6d26fc65a83fb9970c405acdd19e323ce2d045815659a0d688abc385"
+  input-imports = ["github.com/drone/drone-go/plugin"]
   solver-name = "gps-cdcl"
   solver-version = 1

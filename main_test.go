@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/drone/drone-plugin-go/plugin"
+	"github.com/drone/drone-go/plugin"
 	"path/filepath"
 	"reflect"
 	"testing"
