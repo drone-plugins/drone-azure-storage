@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/drone/drone-plugin-go/plugin"
+	"github.com/drone/drone-go/plugin"
 	"os"
 	"os/exec"
 	"path/filepath"
