@@ -8,102 +8,42 @@
 [![Go Doc](https://godoc.org/github.com/drone-plugins/drone-azure-storage?status.svg)](http://godoc.org/github.com/drone-plugins/drone-azure-storage)
 [![Go Report](https://goreportcard.com/badge/github.com/drone-plugins/drone-azure-storage)](https://goreportcard.com/report/github.com/drone-plugins/drone-azure-storage)
 
-Drone plugin to publish files and artifacts to Azure Storage. For the usage information and a listing of the available options please take a look at [the docs](DOCS.md).
+Drone plugin to publish files and artifacts to Azure Storage. For the usage information and a listing of the available options please take a look at [the docs](http://plugins.drone.io/drone-plugins/drone-azure-storage/).
 
-## Binary
+## Build
 
-Build the binary using `make`:
+Build the binary with the following commands:
 
 ```
-make deps build
-```
+export GOOS=linux
+export GOARCH=amd64
+export CGO_ENABLED=0
+export GO111MODULE=on
 
-### Example
-
-```sh
-./drone-azure-storage <<EOF
-{
-    "repo": {
-        "clone_url": "git://github.com/drone/drone",
-        "owner": "drone",
-        "name": "drone",
-        "full_name": "drone/drone"
-    },
-    "system": {
-        "link_url": "https://beta.drone.io"
-    },
-    "build": {
-        "number": 22,
-        "status": "success",
-        "started_at": 1421029603,
-        "finished_at": 1421029813,
-        "message": "Update the Readme",
-        "author": "johnsmith",
-        "author_email": "john.smith@gmail.com"
-        "event": "push",
-        "branch": "master",
-        "commit": "436b7a6e2abaddfd35740527353e78a227ddcb2c",
-        "ref": "refs/heads/master"
-    },
-    "workspace": {
-        "root": "/drone/src",
-        "path": "/drone/src/github.com/drone/drone"
-    },
-    "vargs": {
-        "account_key": "123889asd89u8hsfdjh98128hh",
-        "storage_account": "my-storage-account",
-        "container": "my-container",
-        "source": "folder/to/upload"
-    }
-}
-EOF
+go test -cover ./...
+go build -v -a -tags netgo -o release/linux/amd64/drone-azure-storage
 ```
 
 ## Docker
 
-Build the container using `make`:
+Build the Docker image with the following commands:
 
 ```
-make deps docker
+docker build \
+  --label org.label-schema.build-date=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
+  --label org.label-schema.vcs-ref=$(git rev-parse --short HEAD) \
+  --file docker/Dockerfile.linux.amd64 --tag plugins/azure-storage .
 ```
 
-### Example
+### Usage
 
-```sh
-docker run -i plugins/drone-azure-storage <<EOF
-{
-    "repo": {
-        "clone_url": "git://github.com/drone/drone",
-        "owner": "drone",
-        "name": "drone",
-        "full_name": "drone/drone"
-    },
-    "system": {
-        "link_url": "https://beta.drone.io"
-    },
-    "build": {
-        "number": 22,
-        "status": "success",
-        "started_at": 1421029603,
-        "finished_at": 1421029813,
-        "message": "Update the Readme",
-        "author": "johnsmith",
-        "author_email": "john.smith@gmail.com"
-        "event": "push",
-        "branch": "master",
-        "commit": "436b7a6e2abaddfd35740527353e78a227ddcb2c",
-        "ref": "refs/heads/master"
-    },
-    "workspace": {
-        "root": "/drone/src",
-        "path": "/drone/src/github.com/drone/drone"
-    },
-    "vargs": {
-        "account_key": "123889asd89u8hsfdjh98128hh",
-        "storage_account": "my-storage-account",
-        "container": "my-container",
-        "source": "folder/to/upload"
-    }
-}
-EOF
+```
+docker run --rm \
+  -e PLUGIN_ACCOUNT=my-storage-account \
+  -e PLUGIN_ACCOUNT_KEY=123889asd89u8hsfdjh98128hh \
+  -e PLUGIN_CONTAINER=my-container \
+  -e PLUGIN_SOURCE=folder/to/upload \
+  -v $(pwd):$(pwd) \
+  -w $(pwd) \
+  plugins/azure-storage
 ```
