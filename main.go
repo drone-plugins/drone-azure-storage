@@ -1,74 +1,70 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-	"github.com/drone/drone-go/plugin"
+	"log"
 	"os"
-	"os/exec"
-	"path/filepath"
-	"strings"
+
+	"github.com/urfave/cli"
 )
 
 var (
-	buildCommit string
+	version = "0.0.0"
+	build   = "0"
 )
 
-type AzureBlobxfer struct {
-	StorageAccountKey  string `json:"account_key"`
-	StorageAccountName string `json:"storage_account"`
-	Container          string `json:"container"`
-	Source             string `json:"source"`
-}
-
 func main() {
-	fmt.Printf("Drone Azure Storage Plugin built from %s\n", buildCommit)
-
-	workspace := plugin.Workspace{}
-	vargs := AzureBlobxfer{}
-
-	plugin.Param("workspace", &workspace)
-	plugin.Param("vargs", &vargs)
-	plugin.MustParse()
-
-	if len(vargs.StorageAccountKey) == 0 {
-		fmt.Println("storage_account must be defined in your .drone.yml")
-		return
+	app := cli.NewApp()
+	app.Name = "azure storage plugin"
+	app.Usage = "azure storage plugin"
+	app.Action = run
+	app.Version = fmt.Sprintf("%s+%s", version, build)
+	app.Flags = []cli.Flag{
+		cli.StringFlag{
+			Name:   "account-key",
+			Usage:  "account key",
+			EnvVar: "PLUGIN_ACCOUNT_KEY,AZURE_STORAGE_ACCOUNT_KEY",
+		},
+		cli.StringFlag{
+			Name:   "account",
+			Usage:  "account",
+			EnvVar: "PLUGIN_ACCOUNT,PLUGIN_STORAGE_ACCOUNT,AZURE_STORAGE_ACCOUNT",
+		},
+		cli.StringFlag{
+			Name:   "container",
+			Usage:  "container",
+			EnvVar: "PLUGIN_CONTAINER,AZURE_STORAGE_CONTAINER",
+		},
+		cli.StringFlag{
+			Name:   "source",
+			Usage:  "source",
+			EnvVar: "PLUGIN_SOURCE,AZURE_STORAGE_SOURCE",
+		},
 	}
 
-	if len(vargs.Container) == 0 {
-		fmt.Println("container must be defined in your .drome.yml")
-		return
-	}
-
-	cmd := command(vargs, workspace)
-	trace(cmd)
-
-	// Append StorageAccountKey to the cmd after trace to avoid exposing the key
-	cmd.Args = append(cmd.Args, "--storageaccountkey", vargs.StorageAccountKey)
-	cmd.Env = os.Environ()
-	cmd.Dir = workspace.Path
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-
-	err := cmd.Run()
-	if err != nil {
-		fmt.Printf("Failed to upload %s to %s/%s: %s", vargs.Source, vargs.StorageAccountName, vargs.Container, err)
-		os.Exit(1)
+	if err := app.Run(os.Args); err != nil {
+		log.Fatal(err)
 	}
 }
 
-func command(s AzureBlobxfer, w plugin.Workspace) *exec.Cmd {
-
-	args := []string{
-		s.StorageAccountName,
-		s.Container,
-		filepath.Join(w.Path, s.Source),
+func run(c *cli.Context) error {
+	plugin := Plugin{
+		Config: Config{
+			AccountKey: c.String("account-key"),
+			Account:    c.String("account"),
+			Container:  c.String("container"),
+			Source:     c.String("source"),
+		},
 	}
-	return exec.Command("blobxfer", args...)
-}
 
-// trace writes each command to standard error (preceded by a ‘$ ’) before it
-// is executed. Used for debugging your build.
-func trace(cmd *exec.Cmd) {
-	fmt.Println("$", strings.Join(cmd.Args, " "))
+	if plugin.Config.AccountKey == "" {
+		return errors.New("Missing account_key")
+	}
+
+	if plugin.Config.Container == "" {
+		return errors.New("Missing container")
+	}
+
+	return plugin.Exec()
 }
