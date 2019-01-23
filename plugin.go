@@ -21,14 +21,7 @@ type (
 )
 
 func (p Plugin) Exec() error {
-	cmd := p.command()
-
-	cmd.Env = os.Environ()
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-
-	p.trace(cmd)
-	return cmd.Run()
+	return p.execute(p.command())
 }
 
 func (p *Plugin) command() *exec.Cmd {
@@ -47,6 +40,15 @@ func (p *Plugin) command() *exec.Cmd {
 		"blobxfer",
 		args...,
 	)
+}
+
+func (p Plugin) execute(cmd *exec.Cmd) error {
+	cmd.Env = os.Environ()
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	p.trace(cmd)
+	return cmd.Run()
 }
 
 func (p *Plugin) trace(cmd *exec.Cmd) {
