@@ -10,8 +10,7 @@ import (
 )
 
 var (
-	version = "0.0.0"
-	build   = "0"
+	version = "unknown"
 )
 
 func main() {
@@ -19,7 +18,7 @@ func main() {
 	app.Name = "azure storage plugin"
 	app.Usage = "azure storage plugin"
 	app.Action = run
-	app.Version = fmt.Sprintf("%s+%s", version, build)
+	app.Version = version
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:   "account-key",
