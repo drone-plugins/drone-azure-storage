@@ -13,6 +13,8 @@ type (
 		Account    string
 		Container  string
 		Source     string
+		Destination string
+		Operation  string
 	}
 
 	Plugin struct {
@@ -25,15 +27,32 @@ func (p Plugin) Exec() error {
 }
 
 func (p *Plugin) command() *exec.Cmd {
-	args := []string{
-		p.Config.Account,
-		p.Config.Container,
-		p.Config.Source,
+	args := []string{}
+
+	switch p.Config.Operation {
+	case "upload":
+		args = append(args, "upload")
+		args = append(args, fmt.Sprintf("--local-path=%s", p.Config.Source))
+		args = append(
+			args,
+			fmt.Sprintf("--remote-path=%s/%s", p.Config.Container, p.Config.Destination)
+		)
+	case "download":
+		args = append(args, "download")
+		args = append(
+			args,
+			fmt.Sprintf("--remote-path=%s/%s", p.Config.Container, p.Config.Source)
+		)
+		args = append(args, fmt.Sprintf("--local-path=%s", p.Config.Destination))
+	default:
+		// TODO return error
+		return nil
 	}
 
+	args = append(args, fmt.Sprintf("--storage-account=%s", p.Config.Account))
 	args = append(
 		args,
-		fmt.Sprintf("--storageaccountkey=%s", p.Config.AccountKey),
+		fmt.Sprintf("--storage-account-key=%s", p.Config.AccountKey),
 	)
 
 	return exec.Command(

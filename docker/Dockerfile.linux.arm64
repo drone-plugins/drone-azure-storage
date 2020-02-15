@@ -7,7 +7,7 @@ LABEL maintainer="Drone.IO Community <drone-dev@googlegroups.com>" \
 
 RUN apk add --no-cache python py-pip build-base python-dev libffi-dev openssl-dev && \
   pip install -U pip && \
-  pip install blobxfer==0.9.9.11
+  pip install blobxfer==1.9.4
 
 ADD release/linux/arm64/drone-azure-storage /bin/
 ENTRYPOINT ["/bin/drone-azure-storage"]

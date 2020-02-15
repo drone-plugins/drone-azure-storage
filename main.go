@@ -39,6 +39,16 @@ func main() {
 			Usage:  "source",
 			EnvVar: "PLUGIN_SOURCE,AZURE_STORAGE_SOURCE",
 		},
+		cli.StringFlag{
+			Name:   "destination",
+			Usage:  "destination",
+			EnvVar: "PLUGIN_DESTINATION,AZURE_STORAGE_DESTINATION",
+		},
+		cli.StringFlag{
+			Name:   "operation",
+			Usage:  "operation",
+			EnvVar: "PLUGIN_OPERATION,AZURE_STORAGE_OPERATION",
+		},
 	}
 
 	if err := app.Run(os.Args); err != nil {
@@ -53,6 +63,8 @@ func run(c *cli.Context) error {
 			Account:    c.String("account"),
 			Container:  c.String("container"),
 			Source:     c.String("source"),
+			Destination: c.String("destination"),
+			Operation:  c.String("operation"),
 		},
 	}
 
