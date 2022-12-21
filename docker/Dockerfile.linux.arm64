@@ -5,7 +5,7 @@ LABEL maintainer="Drone.IO Community <drone-dev@googlegroups.com>" \
   org.label-schema.vendor="Drone.IO Community" \
   org.label-schema.schema-version="1.0"
 
-RUN apk add --no-cache python py-pip build-base python-dev libffi-dev openssl-dev && \
+RUN apk add --no-cache python3 py-pip build-base python3-dev libffi-dev openssl-dev && \
   pip install -U pip && \
   pip install blobxfer==0.9.9.11
 
